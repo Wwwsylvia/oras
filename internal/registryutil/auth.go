@@ -27,7 +27,7 @@ import (
 func WithScopeHint(ctx context.Context, target oras.Target, actions ...string) context.Context {
 	if repo, ok := target.(*remote.Repository); ok {
 		scope := auth.ScopeRepository(repo.Reference.Repository, actions...)
-		return auth.AppendScopes(ctx, scope)
+		return auth.AppendScopesPerRegistry(ctx, repo.Reference.Registry, scope)
 	}
 	return ctx
 }

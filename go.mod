@@ -19,3 +19,5 @@ require (
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 )
+
+replace oras.land/oras-go/v2 => github.com/Wwwsylvia/oras-go/v2 v2.0.0-20230919081608-82f2dec8f05c

@@ -1,3 +1,5 @@
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20230919081608-82f2dec8f05c h1:11GNaRFqZzNi9ayXObRjz6nonrq03FwBt1vnsdkxfic=
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20230919081608-82f2dec8f05c/go.mod h1:LTHGmKO431CaOWkqgadzYq0sEixlO+EN/zShuWvT1Yg=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
@@ -34,5 +36,3 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
-oras.land/oras-go/v2 v2.3.0 h1:lqX1aXdN+DAmDTKjiDyvq85cIaI4RkIKp/PghWlAGIU=
-oras.land/oras-go/v2 v2.3.0/go.mod h1:GeAwLuC4G/JpNwkd+bSZ6SkDMGaaYglt6YK2WvZP7uQ=
