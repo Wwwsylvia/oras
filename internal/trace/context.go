@@ -16,7 +16,10 @@ limitations under the License.
 package trace
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -25,6 +28,36 @@ type contextKey int
 
 // loggerKey is the associated key type for logger entry in context.
 const loggerKey contextKey = iota
+
+// CustomTextFormatter wraps the existing TextFormatter
+type CustomTextFormatter struct {
+	logrus.TextFormatter
+}
+
+// Format overrides the TextFormatter's Format method
+// TODO: problem: this does not work for non-tty outputs (key-value pairs)
+func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	// Use the TextFormatter to format the log entry
+	var buf bytes.Buffer
+	f.TextFormatter.DisableTimestamp = true // Disable the default timestamp
+	f.TextFormatter.DisableQuote = true
+	f.TextFormatter.DisableLevelTruncation = true
+
+	formattedLog, err := f.TextFormatter.Format(entry)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the timestamp and level
+	timestamp := entry.Time.Format(time.RFC3339)
+
+	// Prepend the timestamp and log level to the formatted message
+	buf.WriteString(fmt.Sprintf("[%s] ", timestamp))
+	buf.Write(formattedLog)
+	buf.WriteString("\n\n")
+
+	return buf.Bytes(), nil
+}
 
 // NewLogger returns a logger.
 func NewLogger(ctx context.Context, debug bool, verbose bool) (context.Context, logrus.FieldLogger) {
@@ -38,10 +71,13 @@ func NewLogger(ctx context.Context, debug bool, verbose bool) (context.Context, 
 	}
 
 	logger := logrus.New()
-	logger.SetFormatter(&logrus.TextFormatter{
-		DisableQuote:  true,
-		FullTimestamp: true,
-	})
+	// logger.SetFormatter(&logrus.TextFormatter{
+	// 	DisableQuote:           true,
+	// 	FullTimestamp:          true,
+	// 	DisableLevelTruncation: true,
+	// })
+	logger.SetFormatter(&CustomTextFormatter{})
+
 	logger.SetLevel(logLevel)
 	entry := logger.WithContext(ctx)
 	return context.WithValue(ctx, loggerKey, entry), entry
