@@ -39,22 +39,25 @@ type CustomTextFormatter struct {
 func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// Use the TextFormatter to format the log entry
 	var buf bytes.Buffer
-	f.TextFormatter.DisableTimestamp = true // Disable the default timestamp
 	f.TextFormatter.DisableQuote = true
-	f.TextFormatter.DisableLevelTruncation = true
 
-	formattedLog, err := f.TextFormatter.Format(entry)
-	if err != nil {
-		return nil, err
-	}
+	f.TextFormatter.DisableTimestamp = true // Disable the default timestamp
+	f.TextFormatter.DisableLevelTruncation = true
+	// f.TextFormatter.ForceColors = true
 
 	// Get the timestamp and level
 	timestamp := entry.Time.Format(time.RFC3339)
 
 	// Prepend the timestamp and log level to the formatted message
-	buf.WriteString(fmt.Sprintf("[%s] ", timestamp))
-	buf.Write(formattedLog)
-	buf.WriteString("\n\n")
+	buf.WriteString(fmt.Sprintf("[%s] %s", timestamp, entry.Message))
+
+	// formattedLog, err := f.TextFormatter.Format(entry)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// buf.Write(formattedLog)
+
+	buf.WriteString("\n\n\n")
 
 	return buf.Bytes(), nil
 }
@@ -75,6 +78,7 @@ func NewLogger(ctx context.Context, debug bool, verbose bool) (context.Context, 
 	// 	DisableQuote:           true,
 	// 	FullTimestamp:          true,
 	// 	DisableLevelTruncation: true,
+	// 	ForceColors:            true,
 	// })
 	logger.SetFormatter(&CustomTextFormatter{})
 
