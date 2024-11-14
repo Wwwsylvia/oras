@@ -72,6 +72,7 @@ func (p *Printer) Printf(format string, a ...any) error {
 }
 
 // PrintVerbose prints when verbose is true.
+// TODO: this function is no longer needed, delete it and the corresponding tests.
 func (p *Printer) PrintVerbose(a ...any) error {
 	if !p.verbose {
 		return nil
@@ -81,9 +82,6 @@ func (p *Printer) PrintVerbose(a ...any) error {
 
 // PrintStatus prints transfer status.
 func (p *Printer) PrintStatus(desc ocispec.Descriptor, status string) error {
-	name, isTitle := descriptor.GetTitleOrMediaType(desc)
-	if !isTitle {
-		return p.PrintVerbose(status, descriptor.ShortDigest(desc), name)
-	}
+	name, _ := descriptor.GetTitleOrMediaType(desc)
 	return p.Println(status, descriptor.ShortDigest(desc), name)
 }
