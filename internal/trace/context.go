@@ -46,7 +46,7 @@ func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// f.TextFormatter.ForceColors = true
 
 	// Get the timestamp and level
-	timestamp := entry.Time.Format(time.RFC3339)
+	timestamp := entry.Time.Format(time.RFC3339Nano)
 
 	// Prepend the timestamp and log level to the formatted message
 	buf.WriteString(fmt.Sprintf("[%s] %s", timestamp, entry.Message))
@@ -57,7 +57,7 @@ func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// }
 	// buf.Write(formattedLog)
 
-	buf.WriteString("\n\n\n")
+	buf.WriteString("\n\n")
 
 	return buf.Bytes(), nil
 }
