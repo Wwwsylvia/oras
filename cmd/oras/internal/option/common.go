@@ -29,7 +29,7 @@ const NoTTYFlag = "no-tty"
 // Common option struct.
 type Common struct {
 	Debug   bool
-	Verbose bool
+	Verbose bool // deprecated
 	TTY     *os.File
 	*output.Printer
 	noTTY bool
@@ -39,6 +39,7 @@ type Common struct {
 func (opts *Common) ApplyFlags(fs *pflag.FlagSet) {
 	fs.BoolVarP(&opts.Debug, "debug", "d", false, "output debug logs (implies --no-tty)")
 	fs.BoolVarP(&opts.Verbose, "verbose", "v", false, "[Deprecated] verbose output")
+	fs.MarkDeprecated("verbose", "") // TODO: better way to mark deprecate?
 	fs.BoolVarP(&opts.noTTY, NoTTYFlag, "", false, "[Preview] do not show progress output")
 }
 

@@ -28,6 +28,7 @@ const loggerKey contextKey = iota
 
 // NewLogger returns a logger.
 func NewLogger(ctx context.Context, debug bool, verbose bool) (context.Context, logrus.FieldLogger) {
+	// TODO: how does verbose work here?
 	var logLevel logrus.Level
 	if debug {
 		logLevel = logrus.DebugLevel

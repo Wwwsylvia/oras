@@ -71,15 +71,6 @@ func (p *Printer) Printf(format string, a ...any) error {
 	return nil
 }
 
-// PrintVerbose prints when verbose is true.
-// TODO: this function is no longer needed, delete it and the corresponding tests.
-func (p *Printer) PrintVerbose(a ...any) error {
-	if !p.verbose {
-		return nil
-	}
-	return p.Println(a...)
-}
-
 // PrintStatus prints transfer status.
 func (p *Printer) PrintStatus(desc ocispec.Descriptor, status string) error {
 	name, _ := descriptor.GetTitleOrMediaType(desc)
