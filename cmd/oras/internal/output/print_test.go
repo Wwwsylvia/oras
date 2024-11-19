@@ -43,7 +43,7 @@ func (mw *mockWriter) String() string {
 
 func TestPrinter_Println(t *testing.T) {
 	mockWriter := &mockWriter{}
-	printer := NewPrinter(mockWriter, os.Stderr, false)
+	printer := NewPrinter(mockWriter, os.Stderr)
 	err := printer.Println("boom")
 	if mockWriter.errorCount != 1 {
 		t.Error("Expected one error actual <" + strconv.Itoa(mockWriter.errorCount) + ">")

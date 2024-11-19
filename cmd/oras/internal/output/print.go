@@ -27,15 +27,14 @@ import (
 
 // Printer prints for status handlers.
 type Printer struct {
-	out     io.Writer
-	err     io.Writer
-	verbose bool
-	lock    sync.Mutex
+	out  io.Writer
+	err  io.Writer
+	lock sync.Mutex
 }
 
 // NewPrinter creates a new Printer.
-func NewPrinter(out io.Writer, err io.Writer, verbose bool) *Printer {
-	return &Printer{out: out, err: err, verbose: verbose}
+func NewPrinter(out io.Writer, err io.Writer) *Printer {
+	return &Printer{out: out, err: err}
 }
 
 // Write implements the io.Writer interface.
