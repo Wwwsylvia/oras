@@ -18,9 +18,10 @@ limitations under the License.
 package status
 
 import (
+	"testing"
+
 	"oras.land/oras-go/v2/content/memory"
 	"oras.land/oras/internal/testutils"
-	"testing"
 )
 
 func TestTTYPushHandler_TrackTarget(t *testing.T) {

@@ -39,13 +39,14 @@ type Common struct {
 func (opts *Common) ApplyFlags(fs *pflag.FlagSet) {
 	fs.BoolVarP(&opts.Debug, "debug", "d", false, "output debug logs (implies --no-tty)")
 	fs.BoolVarP(&opts.Verbose, "verbose", "v", false, "[Deprecated] verbose output")
-	fs.MarkDeprecated("verbose", "") // TODO: better way to mark deprecate?
 	fs.BoolVarP(&opts.noTTY, NoTTYFlag, "", false, "[Preview] do not show progress output")
+
+	fs.MarkDeprecated("verbose", "and will be removed in a future release.") // TODO: e2e test
 }
 
 // Parse gets target options from user input.
 func (opts *Common) Parse(cmd *cobra.Command) error {
-	opts.Printer = output.NewPrinter(cmd.OutOrStdout(), cmd.OutOrStderr(), opts.Verbose)
+	opts.Printer = output.NewPrinter(cmd.OutOrStdout(), cmd.OutOrStderr())
 	// use STDERR as TTY output since STDOUT is reserved for pipeable output
 	return opts.parseTTY(os.Stderr)
 }
