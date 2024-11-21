@@ -77,6 +77,9 @@ func newStateMachine(cmd string) *stateMachine {
 		sm.addPath("Skipped")
 		sm.addPath("Exists")
 		sm.addPath("Mounted")
+	case "manifest":
+		sm.addPath("Uploading", "Uploaded")
+		sm.addPath("Exists")
 	default:
 		ginkgo.Fail("Unrecognized cmd name " + cmd)
 	}
@@ -160,6 +163,7 @@ func (s *statusMatcher) Match(got *gbytes.Buffer) {
 		fields := strings.Fields(string(line))
 
 		cnt := len(fields)
+		// TODO: remove verbose
 		if cnt == 2 && !s.verbose {
 			// media type is hidden, add it
 			fields = append(fields, "")

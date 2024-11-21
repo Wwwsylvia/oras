@@ -32,6 +32,7 @@ import (
 	"oras.land/oras/test/e2e/internal/testdata/foobar"
 	"oras.land/oras/test/e2e/internal/testdata/multi_arch"
 	. "oras.land/oras/test/e2e/internal/utils"
+	"oras.land/oras/test/e2e/internal/utils/match"
 )
 
 func prepare(src string, dst string) {
@@ -355,11 +356,14 @@ var _ = Describe("1.1 registry users:", func() {
 		})
 	})
 
-	When("running `manifest push`", func() {
+	When("running `manifest push`", Focus, func() {
 		manifest := `{"schemaVersion":2,"mediaType":"application/vnd.oci.image.manifest.v1+json","config":{"mediaType":"application/vnd.oci.image.config.v1+json","digest":"sha256:fe9dbc99451d0517d65e048c309f0b5afb2cc513b7a3d456b6cc29fe641386c5","size":53},"layers":[]}`
 		manifestWithoutMediaType := `{"schemaVersion":2,"mediaType":"","config":{"mediaType":"application/vnd.oci.image.config.v1+json","digest":"sha256:fe9dbc99451d0517d65e048c309f0b5afb2cc513b7a3d456b6cc29fe641386c5","size":53},"layers":[]}`
 		digest := "sha256:bc1a59d49fc7c7b0a31f22ca0c743ecdabdb736777e3d9672fa9d97b4fe323f4"
 		descriptor := "{\"mediaType\":\"application/vnd.oci.image.manifest.v1+json\",\"digest\":\"sha256:bc1a59d49fc7c7b0a31f22ca0c743ecdabdb736777e3d9672fa9d97b4fe323f4\",\"size\":247}"
+		statusKeys := []match.StateKey{
+			{Digest: "bc1a59d49fc7", Name: "application/vnd.oci.image.manifest.v1+json"},
+		}
 
 		It("should push a manifest from stdin without media type flag", func() {
 			tag := "from-stdin"
@@ -371,6 +375,7 @@ var _ = Describe("1.1 registry users:", func() {
 		It("should push a manifest and output descriptor", func() {
 			tag := "from-stdin"
 			ORAS("manifest", "push", RegistryRef(ZOTHost, ImageRepo, tag), "-", "--descriptor").
+				MatchStatus(statusKeys, true, len(statusKeys)).
 				MatchContent(descriptor).
 				WithInput(strings.NewReader(manifest)).Exec()
 		})
