@@ -41,7 +41,7 @@ func (opts *Common) ApplyFlags(fs *pflag.FlagSet) {
 	fs.BoolVarP(&opts.Verbose, "verbose", "v", false, "[Deprecated] verbose output")
 	fs.BoolVarP(&opts.noTTY, NoTTYFlag, "", false, "[Preview] do not show progress output")
 
-	fs.MarkDeprecated("verbose", "and will be removed in a future release.") // TODO: e2e test
+	fs.MarkDeprecated("verbose", "and may be removed in a future release.") // TODO: e2e test
 }
 
 // Parse gets target options from user input.
