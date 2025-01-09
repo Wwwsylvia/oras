@@ -18,7 +18,6 @@ package root
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/spf13/cobra"
@@ -40,7 +39,8 @@ type discoverOptions struct {
 	option.Format
 
 	artifactType string
-	verbose      bool
+	// Deprecated: verbose is deprecated and will be removed in the future.
+	verbose bool
 }
 
 func discoverCmd() *cobra.Command {
@@ -88,7 +88,6 @@ Example - Discover referrers of the manifest tagged 'v1' in an OCI image layout 
 			if cmd.Flags().Changed("output") {
 				switch opts.Format.Type {
 				case "tree", "json", "table":
-					_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "[DEPRECATED] --output is deprecated, try `--format %s` instead\n", opts.Template)
 				default:
 					return errors.New("output type can only be tree, table or json")
 				}
@@ -102,7 +101,9 @@ Example - Discover referrers of the manifest tagged 'v1' in an OCI image layout 
 
 	cmd.Flags().StringVarP(&opts.artifactType, "artifact-type", "", "", "artifact type")
 	cmd.Flags().StringVarP(&opts.Format.FormatFlag, "output", "o", "tree", "[Deprecated] format in which to display referrers (table, json, or tree). tree format will also show indirect referrers")
-	cmd.Flags().BoolVarP(&opts.verbose, "verbose", "v", false, "display full metadata of referrers")
+	_ = cmd.Flags().MarkDeprecated("output", "use --format instead")
+	cmd.Flags().BoolVarP(&opts.verbose, "verbose", "v", true, "display full metadata of referrers")
+	_ = cmd.Flags().MarkDeprecated("verbose", "and will be removed in a future release.")
 	opts.SetTypes(
 		option.FormatTypeTree,
 		option.FormatTypeTable,
