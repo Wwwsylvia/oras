@@ -239,11 +239,11 @@ func runPush(cmd *cobra.Command, opts *pushOptions) error {
 	}
 
 	// prepare push
-	originalDst, err := opts.NewTarget(opts.Common, logger)
+	dst, err := opts.NewTarget(opts.Common, logger)
 	if err != nil {
 		return err
 	}
-	dst, stopTrack, err := statusHandler.TrackTarget(originalDst)
+	trackedDst, stopTrack, err := statusHandler.TrackTarget(dst)
 	if err != nil {
 		return err
 	}
@@ -255,20 +255,20 @@ func runPush(cmd *cobra.Command, opts *pushOptions) error {
 	copyWithScopeHint := func(root ocispec.Descriptor) error {
 		// add both pull and push scope hints for dst repository
 		// to save potential push-scope token requests during copy
-		if repo, ok := originalDst.(*remote.Repository); ok {
+		if repo, ok := dst.(*remote.Repository); ok {
 			ctx = auth.AppendRepositoryScope(ctx, repo.Reference, auth.ActionPull, auth.ActionPush)
 		}
 
 		if tag := opts.Reference; tag == "" {
-			err = oras.CopyGraph(ctx, union, dst, root, copyOptions.CopyGraphOptions)
+			err = oras.CopyGraph(ctx, union, trackedDst, root, copyOptions.CopyGraphOptions)
 		} else {
-			_, err = oras.Copy(ctx, union, root.Digest.String(), dst, tag, copyOptions)
+			_, err = oras.Copy(ctx, union, root.Digest.String(), trackedDst, tag, copyOptions)
 		}
 		return err
 	}
 
 	// Push
-	root, err := doPush(dst, stopTrack, pack, copyWithScopeHint)
+	root, err := doPush(trackedDst, stopTrack, pack, copyWithScopeHint)
 	if err != nil {
 		return err
 	}
@@ -284,7 +284,7 @@ func runPush(cmd *cobra.Command, opts *pushOptions) error {
 		}
 		tagBytesNOpts := oras.DefaultTagBytesNOptions
 		tagBytesNOpts.Concurrency = opts.concurrency
-		dst := listener.NewTagListener(originalDst, nil, metadataHandler.OnTagged)
+		dst := listener.NewTagListener(dst, nil, metadataHandler.OnTagged)
 		if _, err = oras.TagBytesN(ctx, dst, root.MediaType, contentBytes, opts.extraRefs, tagBytesNOpts); err != nil {
 			return err
 		}
