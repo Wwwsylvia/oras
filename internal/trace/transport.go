@@ -129,9 +129,9 @@ func logResponseBody(resp *http.Response) string {
 	if len(readBody) == 0 {
 		return "   Response body is empty"
 	}
-	if containsCredentials(readBody) {
-		return "   Response body redacted due to potential credentials"
-	}
+	// if containsCredentials(readBody) {
+	// 	return "   Response body redacted due to potential credentials"
+	// }
 	if len(readBody) > int(payloadSizeLimit) {
 		return readBody[:payloadSizeLimit] + "\n...(truncated)"
 	}
