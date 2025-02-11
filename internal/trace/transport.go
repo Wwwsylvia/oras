@@ -82,11 +82,11 @@ func logHeader(header http.Header) string {
 	if len(header) > 0 {
 		headers := []string{}
 		for k, v := range header {
-			for _, h := range toScrub {
-				if strings.EqualFold(k, h) {
-					v = []string{"*****"}
-				}
-			}
+			// for _, h := range toScrub {
+			// 	if strings.EqualFold(k, h) {
+			// 		v = []string{"*****"}
+			// 	}
+			// }
 			headers = append(headers, fmt.Sprintf("   %q: %q", k, strings.Join(v, ", ")))
 		}
 		return strings.Join(headers, "\n")
