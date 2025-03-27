@@ -6,6 +6,8 @@ github.com/Masterminds/semver/v3 v3.3.0 h1:B8LGeaivUe71a5qox1ICM/JLl0NqZSW5CHyL+
 github.com/Masterminds/semver/v3 v3.3.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/Masterminds/sprig/v3 v3.3.0 h1:mQh0Yrg1XPo6vjYXgtf5OtijNAKJRNcTdOOGZe3tPhs=
 github.com/Masterminds/sprig/v3 v3.3.0/go.mod h1:Zy1iXRYNqNLUolqCpL4uhk6SHUMAOSCzdgBfDb35Lz0=
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250327094808-6460bc2b2ad4 h1:ym/ID+UhQmSTe3EOLcOip7oi2jbvR9bsMVESzrY1dK4=
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250327094808-6460bc2b2ad4/go.mod h1:KlAU70WTZ88cbuu8ox6qw6vMgh35/OTWci/2Bn49nI4=
 github.com/containerd/console v1.0.4 h1:F2g4+oChYvBTsASRTz8NP6iIAi97J3TtSAsLbIFn4ro=
 github.com/containerd/console v1.0.4/go.mod h1:YynlIjWYF8myEu6sdkwKIvGQq+cOckRm6So2avqoYAk=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
@@ -69,5 +71,3 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
-oras.land/oras-go/v2 v2.5.1-0.20250221033735-cb6d75be7dd4 h1:jlMeewI2WJwjGjhCDC5uQHAVOwyXypeMz7NUZiRhr+4=
-oras.land/oras-go/v2 v2.5.1-0.20250221033735-cb6d75be7dd4/go.mod h1:2UW9eta1+52EMtMRD2gottf9g5EZv9o3gkKfk1iedVw=
