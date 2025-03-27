@@ -32,4 +32,4 @@ require (
 	golang.org/x/sys v0.32.0 // indirect
 )
 
-replace oras.land/oras-go/v2 => github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250327094808-6460bc2b2ad4
+replace oras.land/oras-go/v2 => github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250327121440-a652ba2d71f7
