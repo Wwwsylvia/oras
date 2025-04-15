@@ -139,9 +139,9 @@ func runCopy(cmd *cobra.Command, opts *copyOptions) error {
 		if errors.As(err, &copyErr) {
 			switch copyErr.Origin {
 			case oras.CopyErrorOriginSource:
-				return fmt.Errorf("failed to copy from %q when performing %q: %w", opts.From.Reference, copyErr.Op, err)
+				return fmt.Errorf("failed to copy from %q when performing %q: %w", opts.From.RawReference, copyErr.Op, copyErr.Err)
 			case oras.CopyErrorOriginDestination:
-				return fmt.Errorf("failed to copy to %q when performing %q: %w", opts.To.Reference, copyErr.Op, err)
+				return fmt.Errorf("failed to copy to %q when performing %q: %w", opts.To.RawReference, copyErr.Op, copyErr.Err)
 			}
 		}
 		return err
