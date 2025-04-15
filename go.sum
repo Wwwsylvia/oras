@@ -6,8 +6,8 @@ github.com/Masterminds/semver/v3 v3.3.0 h1:B8LGeaivUe71a5qox1ICM/JLl0NqZSW5CHyL+
 github.com/Masterminds/semver/v3 v3.3.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/Masterminds/sprig/v3 v3.3.0 h1:mQh0Yrg1XPo6vjYXgtf5OtijNAKJRNcTdOOGZe3tPhs=
 github.com/Masterminds/sprig/v3 v3.3.0/go.mod h1:Zy1iXRYNqNLUolqCpL4uhk6SHUMAOSCzdgBfDb35Lz0=
-github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250414094513-085fa5a1b7b0 h1:ZAgzNW3l6ASB8PqmbBTe53MNFwtb3L1YeumVvRuZYrg=
-github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250414094513-085fa5a1b7b0/go.mod h1:KlAU70WTZ88cbuu8ox6qw6vMgh35/OTWci/2Bn49nI4=
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250415104406-cf87621cbcc6 h1:NpO9l9gLu1NyFJLmbFsl+cFBjhc3aGj3MgH/Fg8VBA0=
+github.com/Wwwsylvia/oras-go/v2 v2.0.0-20250415104406-cf87621cbcc6/go.mod h1:KlAU70WTZ88cbuu8ox6qw6vMgh35/OTWci/2Bn49nI4=
 github.com/containerd/console v1.0.4 h1:F2g4+oChYvBTsASRTz8NP6iIAi97J3TtSAsLbIFn4ro=
 github.com/containerd/console v1.0.4/go.mod h1:YynlIjWYF8myEu6sdkwKIvGQq+cOckRm6So2avqoYAk=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
