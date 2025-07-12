@@ -17,6 +17,7 @@ package option
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -24,6 +25,14 @@ import (
 )
 
 func TestBinaryTarget_ModifyError(t *testing.T) {
+	sourceErr := errors.New("source error")
+	destErr := errors.New("destination error")
+	unknownErr := errors.New("unknown error")
+	wrappedCopyErr := fmt.Errorf("wrapped error: %w", &oras.CopyError{
+		Origin: oras.CopyErrorOriginSource,
+		Err:    sourceErr,
+	})
+
 	testCases := []struct {
 		name         string
 		target       *BinaryTarget
@@ -44,10 +53,10 @@ func TestBinaryTarget_ModifyError(t *testing.T) {
 					RawReference: "oci-dir:v1",
 				},
 			},
-			err:          &oras.CopyError{Origin: oras.CopyErrorOriginSource, Err: errors.New("source error")},
+			err:          &oras.CopyError{Origin: oras.CopyErrorOriginSource, Err: sourceErr},
 			wantModified: true,
 			wantPrefix:   `Error from source registry for "localhost:5000/test:v1":`,
-			wantErr:      errors.New("source error"),
+			wantErr:      sourceErr,
 		},
 		{
 			name: "CopyError with Destination origin sets prefix",
@@ -61,10 +70,10 @@ func TestBinaryTarget_ModifyError(t *testing.T) {
 					RawReference: "oci-dir:v1",
 				},
 			},
-			err:          &oras.CopyError{Origin: oras.CopyErrorOriginDestination, Err: errors.New("destination error")},
+			err:          &oras.CopyError{Origin: oras.CopyErrorOriginDestination, Err: destErr},
 			wantModified: true,
 			wantPrefix:   `Error from destination oci-layout for "oci-dir:v1":`,
-			wantErr:      errors.New("destination error"),
+			wantErr:      destErr,
 		},
 		{
 			name: "CopyError with unknown origin",
@@ -78,10 +87,27 @@ func TestBinaryTarget_ModifyError(t *testing.T) {
 					RawReference: "oci-dir:v1",
 				},
 			},
-			err:          &oras.CopyError{Origin: oras.CopyErrorOrigin(-1), Err: errors.New("unknown error")},
+			err:          &oras.CopyError{Origin: oras.CopyErrorOrigin(-1), Err: unknownErr},
 			wantPrefix:   "Error:",
 			wantModified: true,
-			wantErr:      errors.New("unknown error"),
+			wantErr:      unknownErr,
+		},
+		{
+			name: "Wrapped CopyError",
+			target: &BinaryTarget{
+				From: Target{
+					Type:         "registry",
+					RawReference: "localhost:5000/test:v1",
+				},
+				To: Target{
+					Type:         "oci-layout",
+					RawReference: "oci-dir:v1",
+				},
+			},
+			err:          wrappedCopyErr,
+			wantModified: false,
+			wantPrefix:   `Error:`,
+			wantErr:      wrappedCopyErr,
 		},
 	}
 

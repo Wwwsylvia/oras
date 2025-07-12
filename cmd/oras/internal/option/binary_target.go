@@ -16,7 +16,6 @@ limitations under the License.
 package option
 
 import (
-	"errors"
 	"fmt"
 	"sync"
 
@@ -68,12 +67,13 @@ func (target *BinaryTarget) Parse(cmd *cobra.Command) error {
 
 // Modify handles error during cmd execution.
 func (target *BinaryTarget) ModifyError(cmd *cobra.Command, err error) (error, bool) {
-	var copyErr *oras.CopyError
-	if !errors.As(err, &copyErr) {
+	copyErr, ok := err.(*oras.CopyError)
+	if !ok {
+		// if the top-level error is not a CopyError, don't extract the inner error to prevent context loss
 		return target.modifyError(cmd, err)
 	}
 
-	err = copyErr.Err // extract the inner error
+	err = copyErr.Err // extract the inner error from CopyErr
 	var errTarget Target
 	switch copyErr.Origin {
 	case oras.CopyErrorOriginSource:
