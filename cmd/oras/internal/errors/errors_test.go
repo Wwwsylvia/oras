@@ -151,46 +151,6 @@ func TestReportErrResp(t *testing.T) {
 	}
 }
 
-func TestUnwrapCopyError(t *testing.T) {
-	// Create a regular error
-	regularErr := fmt.Errorf("regular error")
-
-	// Create an oras.CopyError with an inner error
-	innerErr := fmt.Errorf("inner error")
-	copyErr := &oras.CopyError{Err: innerErr}
-
-	tests := []struct {
-		name     string
-		inputErr error
-		wantErr  error
-	}{
-		{
-			name:     "nil error",
-			inputErr: nil,
-			wantErr:  nil,
-		},
-		{
-			name:     "regular error",
-			inputErr: regularErr,
-			wantErr:  regularErr,
-		},
-		{
-			name:     "copy error",
-			inputErr: copyErr,
-			wantErr:  innerErr,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			gotErr := UnwrapCopyError(tt.inputErr)
-			if gotErr != tt.wantErr {
-				t.Errorf("UnwrapCopyError() = %v, want %v", gotErr, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestReWrapCopyError(t *testing.T) {
 	// Create a regular error
 	regularErr := fmt.Errorf("regular error")
@@ -199,61 +159,103 @@ func TestReWrapCopyError(t *testing.T) {
 	innerErr := fmt.Errorf("inner error")
 
 	// Create an oras.CopyError with an inner error
-	copyErr := &oras.CopyError{Err: innerErr}
+	copyErr := &oras.CopyError{
+		Err:    innerErr,
+		Origin: oras.CopyErrorOriginSource,
+		Op:     "test operation",
+	}
 
 	// Create an Error wrapping a CopyError
-	cliErr := &Error{
+	cliErrWithCopyErr := &Error{
 		OperationType:  OperationTypeParseArtifactReference,
 		Err:            copyErr,
 		Usage:          "test usage",
 		Recommendation: "test recommendation",
 	}
 
+	// Create an Error without a CopyError
+	cliErrWithoutCopyErr := &Error{
+		OperationType:  OperationTypeParseArtifactReference,
+		Err:            regularErr,
+		Usage:          "test usage",
+		Recommendation: "test recommendation",
+	}
+
+	// Create an regular error wrapping the CopyError
+	errWrappingCopyErr := fmt.Errorf("error wrapping CopyError: %w", copyErr)
+	// Create an regular error wrapping the Error with CopyError
+	errWrappingCliErrWithCopyErr := fmt.Errorf("error wrapping Error with CopyError: %w", cliErrWithCopyErr)
+	// Create an regular error wrapping the Error without CopyError
+	errWrappingCliErrWithoutCopyErr := fmt.Errorf("error wrapping Error without CopyError: %w", cliErrWithoutCopyErr)
+
 	tests := []struct {
 		name      string
 		inputErr  error
-		wantErr   error
 		wantBool  bool
-		checkFunc func(gotErr error, wantErr error) bool
+		checkFunc func(gotErr error) bool
 	}{
 		{
 			name:     "nil error",
 			inputErr: nil,
-			wantErr:  nil,
 			wantBool: false,
-			checkFunc: func(gotErr error, wantErr error) bool {
-				return gotErr == wantErr
+			checkFunc: func(gotErr error) bool {
+				return gotErr == nil
 			},
 		},
 		{
 			name:     "regular error",
 			inputErr: regularErr,
-			wantErr:  regularErr,
 			wantBool: false,
-			checkFunc: func(gotErr error, wantErr error) bool {
-				return gotErr == wantErr
+			checkFunc: func(gotErr error) bool {
+				return gotErr == regularErr
 			},
 		},
 		{
-			name:     "copy error without cli error wrapper",
-			inputErr: copyErr,
-			wantErr:  innerErr,
-			wantBool: true,
-			checkFunc: func(gotErr error, wantErr error) bool {
-				return gotErr == wantErr
+			name:     "Error without CopyError",
+			inputErr: cliErrWithoutCopyErr,
+			wantBool: false,
+			checkFunc: func(gotErr error) bool {
+				return gotErr == cliErrWithoutCopyErr
 			},
 		},
 		{
-			name:     "copy error with cli error wrapper",
-			inputErr: cliErr,
-			wantErr:  cliErr,
+			name:     "Error with CopyError",
+			inputErr: cliErrWithCopyErr,
 			wantBool: true,
-			checkFunc: func(gotErr error, wantErr error) bool {
+			checkFunc: func(gotErr error) bool {
 				gotCliErr, ok := gotErr.(*Error)
-				return ok && gotCliErr.OperationType == cliErr.OperationType &&
+				if !ok {
+					return false
+				}
+				// Check if inner error was replaced
+				return gotCliErr.OperationType == cliErrWithCopyErr.OperationType &&
 					gotCliErr.Err == innerErr &&
-					gotCliErr.Usage == cliErr.Usage &&
-					gotCliErr.Recommendation == cliErr.Recommendation
+					gotCliErr.Usage == cliErrWithCopyErr.Usage &&
+					gotCliErr.Recommendation == cliErrWithCopyErr.Recommendation
+			},
+		},
+		{
+			name:     "Error wrapping CopyError",
+			inputErr: errWrappingCopyErr,
+			wantBool: false,
+			checkFunc: func(gotErr error) bool {
+				return gotErr == errWrappingCopyErr
+			},
+		},
+		{
+			name:     "Error wrapping Error with CopyError",
+			inputErr: errWrappingCliErrWithCopyErr,
+			wantBool: false,
+			checkFunc: func(gotErr error) bool {
+				return gotErr == errWrappingCliErrWithCopyErr
+			},
+		},
+		{
+			name:     "Error wrapping Error without CopyError",
+			inputErr: errWrappingCliErrWithoutCopyErr,
+			wantBool: false,
+			checkFunc: func(gotErr error) bool {
+				return gotErr == errWrappingCliErrWithoutCopyErr
 			},
 		},
 	}
@@ -264,8 +266,9 @@ func TestReWrapCopyError(t *testing.T) {
 			if gotBool != tt.wantBool {
 				t.Errorf("ReWrapCopyError() bool = %v, want %v", gotBool, tt.wantBool)
 			}
-			if !tt.checkFunc(gotErr, tt.wantErr) {
-				t.Errorf("ReWrapCopyError() error = %v, want %v", gotErr, tt.wantErr)
+
+			if !tt.checkFunc(gotErr) {
+				t.Errorf("ReWrapCopyError() returned error doesn't match expected criteria")
 			}
 		})
 	}
